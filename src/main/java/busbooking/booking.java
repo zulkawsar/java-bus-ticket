@@ -58,10 +58,20 @@ public class booking extends javax.swing.JFrame {
             // TODO add your handling code here:
 
             SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+            
             String date = DF.format(txtdate.getDate());
-
-            pst = con.prepareStatement("SELECT seats.id, seats.bus_no, seats.seat_number, seats.status, seats.date, bus_books.customer_name, bus_books.mobile, bus_books.bus_no from seats Left JOIN bus_books ON seats.id = bus_books.bus_no where seats.date = ? ORDER BY seats.seat_number ASC");
+            String source = txtsource.getSelectedItem().toString();
+            String distination = txtdestination.getSelectedItem().toString();
+            String time = txttime.getSelectedItem().toString();
+            
+            pst = con.prepareStatement("SELECT seats.id, seats.bus_no, seats.seat_number, seats.status, seats.date, seats.source,seats.distination,seats.time,"
+                    + "bus_books.customer_name, bus_books.mobile, bus_books.bus_no "
+                    + "from seats Left JOIN bus_books ON seats.id = bus_books.bus_no "
+                    + "where seats.date = ? AND seats.source = ? AND seats.distination = ? AND seats.time = ? ORDER BY seats.seat_number ASC");
             pst.setString(1, date);
+            pst.setString(2, source);
+            pst.setString(3, distination);
+            pst.setString(4, time);
             rs = pst.executeQuery();
 
             ResultSetMetaData red = rs.getMetaData();
@@ -83,6 +93,8 @@ public class booking extends javax.swing.JFrame {
                     v.add(rs.getString("seat_number"));
                     v.add(rs.getString("customer_name"));
                     v.add(rs.getString("mobile"));
+                    v.add(rs.getString("source"));
+                    v.add(rs.getString("distination"));
                     v.add(rs.getString("date"));
                     v.add(rs.getString("status"));
                 }
@@ -121,6 +133,12 @@ public class booking extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        txtsource = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        txtdestination = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        txttime = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,8 +152,8 @@ public class booking extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addGap(544, 544, 544)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                 .addGap(317, 317, 317))
         );
         jPanel1Layout.setVerticalGroup(
@@ -183,7 +201,7 @@ public class booking extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtmobile, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                            .addComponent(txtmobile)
                             .addComponent(txtname)
                             .addComponent(txtid)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -220,7 +238,7 @@ public class booking extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Bus No", "Seat No", "Customar Name", "Phone", "Date", "Status"
+                "ID", "Bus No", "Seat No", "Customar Name", "Phone", "Source", "Destination", "Date", "Status"
             }
         ));
         datatable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -234,6 +252,7 @@ public class booking extends javax.swing.JFrame {
             datatable.getColumnModel().getColumn(0).setPreferredWidth(40);
             datatable.getColumnModel().getColumn(1).setResizable(false);
             datatable.getColumnModel().getColumn(1).setPreferredWidth(50);
+            datatable.getColumnModel().getColumn(6).setResizable(false);
         }
 
         jButton2.setText("Show");
@@ -243,7 +262,7 @@ public class booking extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         jLabel5.setText("Date");
 
         jButton4.setText("Close");
@@ -252,6 +271,18 @@ public class booking extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+
+        jLabel6.setText("Source");
+
+        txtsource.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bagerhat", "Bandarban", "Barguna", "Barisal", "Bhola", "Bogra", "Brahmanbaria", "Chandpur", "Chittagong", "Chuadanga", "Comilla", "Cox's Bazar", "Dhaka", "Dinajpur", "Faridpur", "Feni", "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jaipurhat", "Jamalpur", "Jessore", "Jhalakati\t", "Jhenaidah", "Khagrachari", "Khulna", "Kishoreganj", "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat", "Madaripur", "Magura", "Manikganj", "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon", "Narail", "Narayanganj", "Narsingdi", "Natore", "Nawabganj", "Netrakona", "Nilphamari", "Noakhali", "Pabna", "Panchagarh", "Parbattya Chattagram", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangpur", "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon" }));
+
+        jLabel7.setText("Destination");
+
+        txtdestination.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bagerhat", "Bandarban", "Barguna", "Barisal", "Bhola", "Bogra", "Brahmanbaria", "Chandpur", "Chittagong", "Chuadanga", "Comilla", "Cox's Bazar", "Dhaka", "Dinajpur", "Faridpur", "Feni", "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jaipurhat", "Jamalpur", "Jessore", "Jhalakati\t", "Jhenaidah", "Khagrachari", "Khulna", "Kishoreganj", "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat", "Madaripur", "Magura", "Manikganj", "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon", "Narail", "Narayanganj", "Narsingdi", "Natore", "Nawabganj", "Netrakona", "Nilphamari", "Noakhali", "Pabna", "Panchagarh", "Parbattya Chattagram", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangpur", "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon" }));
+
+        jLabel8.setText("Time");
+
+        txttime.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "00.00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -264,39 +295,61 @@ public class booking extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addComponent(jScrollPane1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2)
-                                .addGap(79, 79, 79))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addContainerGap())))))
+                        .addComponent(jButton4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtsource, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtdestination, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txttime, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel5)
-                        .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtsource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtdestination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txttime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton2))
+                            .addComponent(jLabel8))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -350,13 +403,11 @@ public class booking extends javax.swing.JFrame {
             
             pstSearch = con.prepareStatement("SELECT  COUNT(*) AS total, bus_books.bus_no from bus_books where bus_books.bus_no = ?");
             pstSearch.setString(1, id);
-            rs = pstSearch.executeQuery();
+            ResultSet red = pstSearch.executeQuery();
             
-            ResultSet red = rs;
             red.next();
-            int c;
-
-            c = red.getInt("total");
+            int c = red.getInt("total");
+            
             if (c != 0) {
                 pst = con.prepareStatement("update bus_books set customer_name = ?, mobile = ? where bus_books.bus_no = ?");
                 pst.setString(1, cumtomer_name);
@@ -480,12 +531,18 @@ public class booking extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private com.toedter.calendar.JDateChooser txtdate;
+    private javax.swing.JComboBox<String> txtdestination;
     private javax.swing.JTextField txtid;
     private javax.swing.JTextField txtmobile;
     private javax.swing.JTextField txtname;
+    private javax.swing.JComboBox<String> txtsource;
+    private javax.swing.JComboBox<String> txttime;
     // End of variables declaration//GEN-END:variables
 }
